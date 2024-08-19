@@ -41,7 +41,11 @@ spec:
       initContainers:
       {{- range $service := .Values.readyChecker.services }}
       - name: ready-checker-{{ $service.name }}
-        image: busybox:latest
+        {{- if $.Values.global.imageRegistry }}
+        image: "{{ $.Values.global.imageRegistry }}/busybox"
+        {{- else }}
+        image: busybox
+        {{- end }}
         command:
           - 'sh'
           - '-c'

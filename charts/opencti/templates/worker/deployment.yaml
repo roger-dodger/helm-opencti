@@ -41,7 +41,11 @@ spec:
       {{- if .Values.readyChecker.enabled }}
       initContainers:
       - name: ready-checker-server
-        image: busybox:latest
+        {{- if $.Values.global.imageRegistry }}
+        image: "{{ $.Values.global.imageRegistry }}/busybox"
+        {{- else }}
+        image: busybox
+        {{- end }}
         command:
           - 'sh'
           - '-c'
@@ -65,7 +69,6 @@ spec:
             {{- end }}
           env:
           # Variables from secrets have precedence
-
           {{- $envList := dict -}}
 
           {{- if .Values.worker.envFromSecrets }}
@@ -90,6 +93,7 @@ spec:
           {{- end }}
           {{- end }}
 
+          # Special handling for OPENCTI_TOKEN which is constructed from other values
           {{- if and (not (hasKey $envList "OPENCTI_TOKEN")) (.Values.env.APP__ADMIN__TOKEN) }}
           - name: OPENCTI_TOKEN
             value: "{{ .Values.env.APP__ADMIN__TOKEN }}"
