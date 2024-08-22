@@ -48,9 +48,9 @@ spec:
           {{- if .image.repository }}
           image: "{{ .image.repository }}:{{ .image.tag | default $.Chart.AppVersion }}"
           {{- else if $.Values.global.imageRegistry }}
-          image: "{{ printf "%s/opencti/%s" $.Values.global.imageRegistry .name }}:{{ .image.tag | default $.Chart.AppVersion }}"
+          image: "{{ printf "%s/opencti/connector-%s" $.Values.global.imageRegistry .name }}:{{ .image.tag | default $.Chart.AppVersion }}"
           {{- else }}
-          image: "{{ printf "opencti/%s" .name }}:{{ .image.tag | default $.Chart.AppVersion }}"
+          image: "{{ printf "opencti/connector-%s" .name }}:{{ .image.tag | default $.Chart.AppVersion }}"
           {{- end }}
           imagePullPolicy: {{ .image.pullPolicy | default "IfNotPresent" }}
           env:
